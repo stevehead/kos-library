@@ -24,10 +24,10 @@ UNTIL countdown = 0 {
 PRINT "LAUNCH".
 STAGE.
 
-// Auto-Stage once
-WHEN stage:liquidfuel = 0 THEN {
-	STAGE.
-}.
+// Auto-Stage once <- Disabled until I find better solution.
+//WHEN stage:liquidfuel = 0 THEN {
+//	STAGE.
+//}.
 
 // Roll program and gravity turn
 WAIT 4.
