@@ -1,13 +1,10 @@
-DECLARE PARAMETER target_apoapsis.
-DECLARE PARAMETER target_heading.
 SET countdown TO 3.
 
 // In case script is aborted
 SET SHIP:CONTROL:PILOTMAINTHROTTLE TO 0.
 
 // Ascent parameters
-SET atmmultiplier TO SQRT(3.2 / 2).
-LOCK current_pitch TO -2.727316445e-8 * (airspeed / atmmultiplier) ^ 3 + 9.1373501e-5 * (airspeed / atmmultiplier) ^ 2 - 1.383155463e-1 * (airspeed / atmmultiplier) + 92.45551211.
+LOCK current_pitch TO -2.727316445e-8 * (steepness * airspeed / scale_multiplier) ^ 3 + 9.1373501e-5 * (steepness * airspeed / scale_multiplier) ^ 2 - 1.383155463e-1 * (steepness * airspeed / scale_multiplier) + 92.45551211.
 
 // Countdown
 CLEARSCREEN.
@@ -26,7 +23,7 @@ PRINT "LAUNCH".
 STAGE.
 
 // Auto-Stage once
-WHEN stage:liquidfuel < 0.001 THEN {
+WHEN stage:liquidfuel < 0.1 THEN {
 	STAGE.
 }.
 
@@ -43,14 +40,14 @@ WAIT UNTIL airspeed > 130.
 LOCK steering TO heading(target_heading, current_pitch).
 
 // Complete gravity turn
-WHEN current_pitch < 2 OR altitude > 36000 * atmmultiplier THEN {
+WHEN current_pitch < 2 OR altitude > 36000 * scale_multiplier THEN {
 	PRINT "Gravity Turn Complete".
 	UNLOCK current_pitch.
 	LOCK steering TO heading(target_heading, 0).
 }.
 
 // Throttle Down
-WAIT UNTIL apoapsis >= target_apoapsis * 0.95.
+WAIT UNTIL apoapsis >= target_apoapsis * 0.99.
 PRINT "Throttle Down".
 LOCK throttle TO 0.1.
 
